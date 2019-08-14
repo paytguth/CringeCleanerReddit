@@ -2,7 +2,7 @@
 import praw, sys, re, getpass
 from multiprocessing import Process
 from datetime import datetime
-#python cringeclean.py username client_id client_secret
+# python redditbot.py username client_id client_secret
 
 
 reddit = praw.Reddit(
