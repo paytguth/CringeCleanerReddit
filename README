@@ -1,0 +1,10 @@
+Drag cringeclean.py into directory
+Open terminal in directory
+
+Run using command: 
+python cringeclean.py username client_id client_secret
+
+Get your client_id and client_secret from 
+https://www.reddit.com/prefs/apps
+-> Create new app
+-> Script
