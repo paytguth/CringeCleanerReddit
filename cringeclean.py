@@ -1,17 +1,20 @@
+# Cringe Cleaner for reddit. cringeclean.py
+# Delete old embarassing comments by keyword or subreddit
+# Created by Payton Guthrie
+
+# python cringeclean.py username client_id client_secret
 
 import praw, sys, re, getpass
 from multiprocessing import Process
 from datetime import datetime
-# python redditbot.py username client_id client_secret
 
 
 reddit = praw.Reddit(
     client_id = sys.argv[2],
     client_secret = sys.argv[3],
     username = sys.argv[1],
-    password = getpass.getpass("Password: "),
-    user_agent = 'linux:Reddit Cleaner:1.0 (by /u/espresso_snake)'
-
+    password = getpass.getpass("Password for " + sys.argv[1] + ": "),
+    user_agent = 'linux:Cringe Cleaner:1.0 (by /u/espresso_snake)'
 )
 
 
@@ -42,12 +45,14 @@ def searchCommentsBySubreddit(username) :
     subredditKeyword = str(input("Please enter name of subreddit you'd like to delete all comments from\n")).lower()
     print("Showing all comments from subreddit \'r/" + subredditKeyword + "\'")
 
+    # Searches for user comments in selected subreddit
     for comment in reddit.redditor(username).comments.top(limit=None) :
         subredditName = str(comment.subreddit.display_name).lower()
         if subredditKeyword == subredditName:
             displayComment(comment)
             commentList.append(comment)
 
+    # Prompts for approval to delete selected comments
     if (commentList != []) :
         deleteOrNot = str(input("Delete all comments shown? (y/n) ")).lower()
         if (deleteOrNot == "y") :
@@ -60,18 +65,18 @@ def searchCommentsBySubreddit(username) :
 # Arg type: Username String
 def searchCommentsByKeyword(username) :
     commentList = []
-
     keyword = str(input("Please enter keyword you'd like to delete all comments containing\n"))
     print("Showing all comments containing keyword \'" + keyword + "\'")
 
+    # Searches comment body for keyword. not case sensitive.
     for comment in reddit.redditor(username).comments.top(limit=None) :
-        # Searches comment body for keyword. not case sensitive. Regex
         expression = r"\b" + re.escape(keyword) + r"\b"
         match = re.search(expression, comment.body, re.I)
         if (match) :
             displayComment(comment)
             commentList.append(comment)
 
+    # Prompts for approval to delete selected comments
     if (commentList != []) :
         deleteOrNot = str(input("Delete all comments shown? (y/n) ")).lower()
         if (deleteOrNot == "y") :
@@ -84,7 +89,7 @@ def main() :
     username = sys.argv[1]
     reddit.read_only = False
 
-    # Intro
+    # Choose to delete by keyword or subreddit
     subOrKeyword = input("Enter s to delete comment by subreddit, and k to delete comment by keyword\n")
 
     # Deleting by subreddit
